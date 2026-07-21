@@ -1,0 +1,21 @@
+{
+  "timestamp": 1784667117.129028,
+  "token_usage": {
+    "total_tokens": 11,
+    "active_turns": 1,
+    "compressed_turns": 0,
+    "max_active_tokens": 120000,
+    "usage_pct": 0.0
+  },
+  "working_summary": {
+    "decisions": [],
+    "rejected": [],
+    "pending": [],
+    "current_focus": "",
+    "last_compression": 0.0
+  },
+  "shared_state": {
+    "session/last_query": "What is the current focus of the HVAC Simulation project?",
+    "session/last_response_time": 1784667095.8414536
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "key": "session.last_response_time",
+  "value": 1784667392.61144,
+  "history": [
+    {
+      "timestamp": 1784667095.8414905,
+      "actor": "system",
+      "old_value": null,
+      "new_value": 1784667095.8414536,
+      "reason": "Track response timestamp"
+    },
+    {
+      "timestamp": 1784667327.64189,
+      "actor": "system",
+      "old_value": 1784667095.8414536,
+      "new_value": 1784667327.6418214,
+      "reason": "Track response timestamp"
+    },
+    {
+      "timestamp": 1784667392.6114416,
+      "actor": "system",
+      "old_value": 1784667327.6418214,
+      "new_value": 1784667392.61144,
+      "reason": "Track response timestamp"
+    }
+  ],
+  "created_at": 1784667095.8414922,
+  "updated_at": 1784667392.6114416
+}

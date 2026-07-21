@@ -1,0 +1,29 @@
+{
+  "key": "session.last_query",
+  "value": "> How do I quickly patch the UI to hide the error?",
+  "history": [
+    {
+      "timestamp": 1784667095.8413088,
+      "actor": "system",
+      "old_value": null,
+      "new_value": "What is the current focus of the HVAC Simulation project?",
+      "reason": "Track last user query"
+    },
+    {
+      "timestamp": 1784667327.6416576,
+      "actor": "system",
+      "old_value": "What is the current focus of the HVAC Simulation project?",
+      "new_value": "What is the current focus of the HVAC Simulation project?",
+      "reason": "Track last user query"
+    },
+    {
+      "timestamp": 1784667392.6111214,
+      "actor": "system",
+      "old_value": "What is the current focus of the HVAC Simulation project?",
+      "new_value": "> How do I quickly patch the UI to hide the error?",
+      "reason": "Track last user query"
+    }
+  ],
+  "created_at": 1784667095.8413138,
+  "updated_at": 1784667392.6111214
+}

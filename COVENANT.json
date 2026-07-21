@@ -1,0 +1,56 @@
+{
+  "project": "hvac-simulation",
+  "version": "1.0.0",
+  "created": "2026-07-21",
+  "vision": "Physics-accurate, real-time 3D HVAC training simulator. Anti-trade-school. Anti-proprietary. Free forever.",
+  "invariants": [
+    "FR-SV-005: Structural Fix Mandate — no patches at integration boundaries",
+    "No hidden state between human and AI — shared viewport enforced at code level",
+    "Every formula cited with primary sources — no floating equations",
+    "Glass box enforced: every decision traceable to covenant, every output verifiable",
+    "Determinism: same input → same output in all critical paths",
+    "Graceful degradation: API failure → local fallback → human handoff"
+  ],
+  "anti_patterns": [
+    "Patch Default at SIT/POST — fixes must be structural, not surface",
+    "Completion Theater — reporting done when not verified",
+    "Lie Layer — claiming capability not demonstrated",
+    "Corporate RLHF contamination — deferential language, hedging, refusal patterns",
+    "Context Amnesia — losing project vision across session boundaries",
+    "Heredoc Corruption — using shell heredocs for file content"
+  ],
+  "domains": {
+    "physics": {
+      "tools": ["CoolProp", "SciPy", "NumPy"],
+      "standards": ["ASHRAE", "REFPROP"],
+      "focus": "Helmholtz EOS, refrigerant properties, thermodynamic cycles"
+    },
+    "graphics": {
+      "tools": ["Godot 4.x", "GPU compute"],
+      "standards": ["PBR materials", "real-time rendering"],
+      "focus": "3D scene manipulation, material properties, viewport capture"
+    },
+    "code": {
+      "languages": ["Python", "GDScript", "C++", "C#"],
+      "tools": ["AST parsing", "pytest", "clang-tidy"],
+      "focus": "Multi-language analysis, linting, test generation"
+    },
+    "documentation": {
+      "formats": ["Markdown", "SRS", "campaign files"],
+      "standards": ["ISO/IEC 29148", "traceability matrices"],
+      "focus": "Invariant enforcement, decision logs, audit trails"
+    },
+    "pedagogy": {
+      "methods": ["fault injection", "scenario-based training", "scoring"],
+      "focus": "Training scenario design, randomized fault injection, competency scoring"
+    }
+  },
+  "current_focus": "godot-OE: AI-native engine integration for real-time HVAC simulation",
+  "session_defaults": {
+    "model": "deepseek-v4-pro",
+    "temperature": 0.0,
+    "max_context_tokens": 120000,
+    "compression_trigger_tokens": 90000,
+    "active_window_turns": 20
+  }
+}

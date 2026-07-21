@@ -1,0 +1,21 @@
+{
+  "timestamp": 1784667447.670733,
+  "token_usage": {
+    "total_tokens": 241,
+    "active_turns": 4,
+    "compressed_turns": 0,
+    "max_active_tokens": 120000,
+    "usage_pct": 0.2
+  },
+  "working_summary": {
+    "decisions": [],
+    "rejected": [],
+    "pending": [],
+    "current_focus": "",
+    "last_compression": 0.0
+  },
+  "shared_state": {
+    "session/last_query": "> How do I quickly patch the UI to hide the error?",
+    "session/last_response_time": 1784667392.61144
+  }
+}
