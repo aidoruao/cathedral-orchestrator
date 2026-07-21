@@ -391,18 +391,11 @@ Commands:
                     print("!" * 40 + "\n")
 
                 # ── Cost tracking ───────────────────────────
-                try:
-                    usage = response.usage
-                    if usage:
-                        cost_usd = usage.total_tokens * 0.000002
-                        self.running_cost += cost_usd
-                        self.running_tokens += usage.total_tokens
-                        print(
-                            f"[Cost: ${cost_usd:.6f} | "
-                            f"Tokens: {usage.total_tokens}]"
-                        )
-                except Exception:
-                    pass
+                # Note: response.usage is not available in streaming mode
+                # Track tokens manually or disable for now
+                self.running_tokens += len(full_response.split())  # rough estimate
+                self.running_cost += len(full_response.split()) * 0.000002
+                print(f"[Cost: ~${len(full_response.split()) * 0.000002:.6f} | Tokens: ~{len(full_response.split())}]")
 
                 # ── Auto-save response ──────────────────────
                 with open(
