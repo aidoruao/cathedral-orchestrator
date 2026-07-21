@@ -120,6 +120,7 @@ RESERVED_COMMANDS = {
     "help": "Show this help",
     "domains": "Show active domains and available domain list",
     "compress": "Trigger manual context compression",
+    "copy": "Print path to last saved response",
     "clear": "Clear the screen",
 }
 
@@ -274,6 +275,18 @@ def handle_reserved(
             print(f"Compression: {before['total_tokens']} → {after['total_tokens']} tokens")
         return "compress_done"
 
+    elif cmd == "copy":
+        copy_path = os.path.expanduser("~/cathedral/last_response.txt")
+        if os.path.exists(copy_path):
+            with open(copy_path) as f:
+                content = f.read()
+            print(f"\n--- Last Response ({len(content)} chars) ---")
+            print(f"Path: {copy_path}")
+            print(f"Copy: cat {copy_path} | clipboard")
+        else:
+            print("No response saved yet. Run a query first.")
+        return "copy_displayed"
+
     elif cmd == "clear":
         print("\033[2J\033[H", end="")
         return "clear_done"
@@ -332,7 +345,8 @@ def interactive_loop(
     print(f"Endpoint: {base_url}")
     print(f"Project: {covenant['project']}")
     print(f"Focus: {covenant.get('current_focus', 'General')}")
-    print(f"\nType '/help' for commands. Everything else is sent to the AI.\n")
+    print(f"\nType '/help' for commands. Everything else is sent to the AI.")
+    print(f"Responses auto-saved to: ~/cathedral/last_response.txt\n")
 
     if audit_log:
         audit_log("session_start", "orchestrator", {
@@ -417,6 +431,16 @@ def interactive_loop(
 
             print("\n" + "─" * 60)
 
+            # --- Cost tracking ---
+            try:
+                # Streaming responses accumulate usage in the final chunk
+                if hasattr(response, 'usage') and response.usage:
+                    usage = response.usage
+                    cost_usd = usage.total_tokens * 0.000002
+                    print(f"[Tokens: {usage.total_tokens} | Cost: ${cost_usd:.6f}]")
+            except Exception:
+                pass
+
             # --- Integrity watchdog scan ---
             if watchdog_analyze:
                 warnings = watchdog_analyze(full_response)
@@ -428,6 +452,13 @@ def interactive_loop(
             # --- Add response to context ---
             if context_engine:
                 context_engine.add_turn("assistant", full_response)
+
+            # --- Auto-save response for easy copying ---
+            try:
+                with open(os.path.expanduser("~/cathedral/last_response.txt"), "w") as f:
+                    f.write(full_response)
+            except Exception:
+                pass
 
             # --- Log the response ---
             if audit_log:
