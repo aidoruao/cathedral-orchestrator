@@ -62,13 +62,52 @@ class CathedralOrchestrator:
             return json.load(f)
 
     def _system_message(self):
+        cmd_ref = """
+AVAILABLE COMMANDS — Generate these exactly in your responses when needed:
+
+Navigation:
+  /project <hvac|godot|cathedral> — Switch active project directory
+
+File Operations:
+  /read <filepath> — Read file from current project (relative to project root)
+  /write <filepath> — Write file (prompts for content, use Base64, no heredocs)
+  /run <command> — Execute shell command in WSL2
+
+Git:
+  /status — Git status of current project
+  /commit <message> — Git add -A && git commit
+  /push — Git push
+
+Session:
+  /save — Save conversation to JSON
+  /load <file> — Load session from JSON
+  /export <filename> — Export conversation as numbered campaign file
+
+Info:
+  /covenant — Reload project vision
+  /cost — Show running cost and token usage
+  /copy — Show path to last_response.txt
+  /help — Show all commands
+
+WORKFLOW:
+When the user gives a high-level instruction like "build the module" or "fix the bug":
+1. Generate the exact command sequence needed
+2. Use /project first if switching projects
+3. Use /run to inspect state before modifying
+4. Use /write to create/modify files with full content
+5. Use /run to build/test/verify
+6. Report results and next steps
+
+Always generate commands the human can copy-paste. Never explain what you would do — generate the actual commands.
+"""
         return {
             "role": "system",
             "content": (
                 f"You are the Cathedral Orchestrator for {self.covenant['project']}. "
                 f"Vision: {self.covenant['vision']}. "
                 f"Invariants: {self.covenant['invariants']}. "
-                f"Current focus: {self.covenant['current_focus']}"
+                f"Current focus: {self.covenant['current_focus']}\n\n"
+                f"{cmd_ref}"
             ),
         }
 
@@ -336,6 +375,20 @@ Commands:
                     print(content, end="", flush=True)
                     full_response += content
                 print("\n" + "=" * 60 + "\n")
+
+                # ── Command extraction ──────────────────────
+                import re
+                commands = re.findall(
+                    r"^(/[a-zA-Z_]+(?:\s+[^\n]+)?)",
+                    full_response,
+                    re.MULTILINE,
+                )
+                if commands:
+                    print("\n" + "!" * 40)
+                    print("COMMANDS DETECTED — Copy-paste to execute:")
+                    for cmd in commands:
+                        print(f"  {cmd}")
+                    print("!" * 40 + "\n")
 
                 # ── Cost tracking ───────────────────────────
                 try:
