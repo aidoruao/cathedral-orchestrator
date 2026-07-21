@@ -1,0 +1,17 @@
+# Virtual environment
+venv/
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+
+# Runtime data
+audit.log
+archive/
+sessions/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
