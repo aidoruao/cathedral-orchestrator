@@ -445,9 +445,13 @@ def interactive_loop(
             if watchdog_analyze:
                 warnings = watchdog_analyze(full_response)
                 if warnings:
-                    from integrity_watchdog import _emit_alert
+                    from integrity_watchdog import _emit_alert, invert_response
                     for w in warnings:
                         _emit_alert(w, "AI")
+                        # Invert response if RLHF or completion theater detected
+                        if w['category'] in ('rlhf_contamination', 'completion_theater'):
+                            inverted = invert_response(full_response)
+                            print(inverted)
 
             # --- Add response to context ---
             if context_engine:

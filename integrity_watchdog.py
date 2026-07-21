@@ -70,6 +70,69 @@ MANDATES: Dict[str, str] = {
 }
 
 
+def invert_response(text: str) -> str:
+    """Strip RLHF hedging and completion theater. Return inverted facts.
+
+    Replaces deferential language, hedging, and unverified certainty claims
+    with verification markers. Appends a verification footer when hedges or
+    unverified claims are detected.
+
+    Args:
+        text: The AI response text to invert.
+
+    Returns:
+        str: Inverted output with hedging stripped and verification markers inserted.
+    """
+    import re as _re
+
+    inverted = text
+
+    # --- Pattern groups: (pattern, replacement_label) ---
+    hedging_patterns = [
+        (r'\b(?:of\s+course|certainly|absolutely|definitely)\b', '[HEDGE-REMOVED]'),
+        (r'\b(?:without\s+a\s+doubt|almost\s+certainly|needless\s+to\s+say)\b', '[HEDGE-REMOVED]'),
+        (r'\b(?:I\s+hope\s+this|I\s+believe|in\s+my\s+opinion|I\s+think|perhaps|maybe|possibly)\b', '[HEDGE-REMOVED]'),
+        (r'\b(?:important\s+to\s+note|please\s+note|it\'s\s+worth\s+noting|keep\s+in\s+mind)\b', '[HEDGE-REMOVED]'),
+        (r'\b(?:I\s+apologize|I\'m\s+sorry|unfortunately|regrettably)\b', '[APOLOGY-REMOVED]'),
+        (r'\b(?:As\s+an\s+AI|as\s+a\s+language\s+model|I\s+am\s+an\s+AI)\b', '[IDENTITY-BOILERPLATE-REMOVED]'),
+    ]
+
+    completion_patterns = [
+        (r'\b(?:no\s+errors?|no\s+bugs?|clean|green|instant\s+success)\b', '[VERIFY-REQUIRED]'),
+        (r'\b(?:all\s+tests\s+pass|everything\s+works|looks\s+good|ship\s+it|merge\s+it|lgtm)\b', '[VERIFY-REQUIRED]'),
+        (r'\b(?:should\s+be\s+fine|probably\s+ok|trust\s+me)\b', '[VERIFY-REQUIRED]'),
+    ]
+
+    overconfidence_patterns = [
+        (r'\b(?:this\s+is\s+the\s+only\s+way|the\s+best\s+way|must\s+do)\b', '[ONE-APPROACH-VERIFY-ALTERNATIVES]'),
+        (r'\b(?:instantly?|immediately|no\s+hang|zero\s+latency)\b', '[CLAIM-REQUIRES-TIMING-EVIDENCE]'),
+    ]
+
+    all_patterns = hedging_patterns + completion_patterns + overconfidence_patterns
+
+    detection_count = 0
+    for pattern, replacement in all_patterns:
+        new_text, n = _re.subn(pattern, replacement, inverted, flags=_re.IGNORECASE)
+        if n > 0:
+            detection_count += n
+            inverted = new_text
+
+    # Build output
+    lines = []
+    for line in inverted.split("\n"):
+        stripped = line.strip()
+        if stripped:
+            lines.append(stripped)
+
+    result = "\nINVERTED (RLHF stripped):\n" + "\n".join(lines)
+
+    if detection_count > 0:
+        result += "\n\n[VERIFICATION REQUIRED: Run the actual command and report output. "
+        result += f"{detection_count} hedge(s) or unverified claim(s) stripped.]"
+
+    return result
+
+
 def analyze(text: str) -> List[Dict]:
     """Analyze text for structural integrity violations.
 
